@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.js": "/Milestone3/static/js/main.16b45c88.js",
+    "static/media/imdb_movie_dataset.csv": "/Milestone3/static/media/imdb_movie_dataset.d33d0ceedaef98dccc72.csv",
+    "index.html": "/Milestone3/index.html",
+    "main.16b45c88.js.map": "/Milestone3/static/js/main.16b45c88.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.16b45c88.js"
+  ]
+}
