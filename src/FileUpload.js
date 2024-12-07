@@ -28,9 +28,15 @@ class FileUpload extends Component {
   };
   csvToJson = (csv) => {
     const parsed = Papa.parse(csv, {header: true, skipEmptyLines: true, dynamicTyping: true,})
-    const filteredData = parsed.data.filter((row) =>
+    /*const filteredData = parsed.data.filter((row) =>
       Object.values(row).every((value) => value !== null && value !== undefined && !isNaN(value))
-    );    
+    ); */
+
+    const columnsToCheck = ['Rank', 'Votes', 'Rating', 'Revenue (Millions)'];
+    const filteredData = parsed.data.filter((row) =>
+      columnsToCheck.every((col) => row[col] !== null && row[col] !== undefined && !isNaN(row[col]))
+    );
+    
     return filteredData;
   };
 
