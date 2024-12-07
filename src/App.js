@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // Load data
     d3.csv(imdbDataset).then((data) => {
       const parsedData = data.map((d) => ({
         Rank: +d.Rank,
@@ -50,13 +49,13 @@ class App extends Component {
 
   concatenateNames = () => {
     const { data } = this.state;
-
+    console.log('datastruct', data)
     const allActors = data
       .map((d) => d.Actors)
       .filter((actors) => actors !== undefined && actors !== "")
       .flatMap((actors) => actors.split(",").map((actor) => actor.trim()))
       .join(", ");
-
+    
     const allDirectors = data
       .map((d) => d.Director)
       .filter((director) => director !== undefined && director !== "")
@@ -70,6 +69,7 @@ class App extends Component {
   };
 
   handleFileUpload = (uploadedData, headers) => {
+    console.log('isitior', uploadedData)
     this.setState({data: uploadedData}, () => {this.updateFilteredData();
       this.concatenateNames();
     })

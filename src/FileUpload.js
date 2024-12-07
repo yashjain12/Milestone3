@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Papa from "papaparse";
 
 class FileUpload extends Component {
   constructor(props) {
@@ -18,45 +19,19 @@ class FileUpload extends Component {
       reader.onload = (e) => {
         const text = e.target.result;
         const json = this.csvToJson(text);
-        console.log('text', json)
         const headers = this.getHeaders(text);
+        console.log('headers', headers)
         this.props.onFileUpload(json, headers);
       };
       reader.readAsText(file);
     }
   };
-
- /* csvToJson = (csv) => {
-    const lines = csv.split("\n");
-    const headers = lines[0].split(",").map((header) => header.trim());
-    const result = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const currentLine = lines[i].split(",");
-      const obj = {};
-      headers.forEach((header, index) => {
-        obj[header] = currentLine[index]?.trim();
-      });
-      if (Object.keys(obj).length && lines[i].trim()) {
-        result.push(obj);
-      }
-    }*/
-      csvToJson = (csv) => {
-        const lines = csv.split("\n");
-        const headers = lines[0].split(",").map((header) => header.trim());
-        const result = [];
-      
-        for (let i = 1; i < lines.length; i++) {
-          const currentLine = lines[i].split(",");
-          const obj = {};
-          headers.forEach((header, index) => {
-            obj[header] = currentLine[index]?.trim();
-          });
-          if (Object.keys(obj).length && lines[i].trim()) {
-            result.push(obj);
-          }
-        }
-    return result;
+  csvToJson = (csv) => {
+    const parsed = Papa.parse(csv, {header: true, skipEmptyLines: true, dynamicTyping: true,})
+    const filteredData = parsed.data.filter((row) =>
+      Object.values(row).every((value) => value !== null && value !== undefined && !isNaN(value))
+    );    
+    return filteredData;
   };
 
   getHeaders = (csv) => {
@@ -66,9 +41,9 @@ class FileUpload extends Component {
 
   render() {
     return (
-      <div style={{marginBottom: 100, backgroundColor: "#f0f0f0", paddingBottom: 50, paddingRight:100, paddingLeft:100 }}>
+      <div style={{ marginBottom: 100, backgroundColor: "#f0f0f0", paddingBottom: 50, paddingRight: 100, paddingLeft: 100 }}>
         <h2>Upload a CSV File</h2>
-        <form /*onSubmit={this.handleFileSubmit}*/ onSubmit = {(e) => e.preventDefault()} style = {{display: 'flex'}}>
+        <form onSubmit={this.handleFileSubmit} style={{ display: 'flex' }}>
           <input type="file" accept=".csv" onChange={(event) => this.setState({ file: event.target.files[0] })} />
           <button type="submit">Upload</button>
         </form>

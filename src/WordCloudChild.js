@@ -16,11 +16,13 @@ class WordCloudChild extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log("allActors", this.props.allActors)
     if (
       prevProps.allActors !== this.props.allActors ||
       prevProps.allDirectors !== this.props.allDirectors ||
       prevState.selectedCategory !== this.state.selectedCategory
     ) {
+      console.log("updating wordcloud")
       this.updateWordFrequency();
       this.renderWordCloud();
     }
@@ -31,11 +33,10 @@ class WordCloudChild extends Component {
     const { selectedCategory } = this.state;
 
     let words = [];
-
     if (selectedCategory === "Actors") {
-      words = allActors.split(",").map((actor) => actor.trim());
+      words = allDirectors.split(",").map((actor) => actor.trim());
     } else if (selectedCategory === "Directors") {
-      words = allDirectors.split(",").map((director) => director.trim());
+      words = allActors.split(",").map((director) => director.trim());
     }
 
     const wordFrequency = Object.entries(
@@ -47,7 +48,7 @@ class WordCloudChild extends Component {
       }, {})
     );
 
-    this.setState({ wordFrequency });
+    this.setState({ wordFrequency }, () => {console.log('werds', wordFrequency)});
   };
 
   renderWordCloud() {
@@ -122,8 +123,14 @@ class WordCloudChild extends Component {
   }
 
   handleCategoryChange = (event) => {
-    this.setState({ selectedCategory: event.target.value });
+    const newCategory = event.target.value; // Get the selected value
+    this.setState({ selectedCategory: newCategory }, () => {
+      // Use the updated state in the callback
+      console.log("Selected category:", this.state.selectedCategory);
+      this.updateWordFrequency(); // Ensure wordFrequency updates after state change
+    });
   };
+  
 
   render() {
     return (
@@ -148,7 +155,7 @@ class WordCloudChild extends Component {
               checked={this.state.selectedCategory === "Directors"}
               onChange={this.handleCategoryChange}
             />
-            Actors
+            Directors
           </label>
           <label style={{ marginLeft: "20px" }}>
             <input
@@ -157,7 +164,7 @@ class WordCloudChild extends Component {
               checked={this.state.selectedCategory === "Actors"}
               onChange={this.handleCategoryChange}
             />
-            Directors
+            Actors
           </label>
         </div>
         <div>
